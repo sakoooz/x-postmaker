@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 const fields = {
   serviceName: document.getElementById("serviceName"),
   title: document.getElementById("title"),
+  genre: document.getElementById("genre"),
   description: document.getElementById("description"),
   characterName: document.getElementById("characterName"),
   characterDescription: document.getElementById("characterDescription"),
@@ -33,56 +34,141 @@ const imagePosition = {
   y: 0
 };
 
-const themes = {
-  dark: {
-    bg: "#3d3d3d",
-    right: "#a8a8a8",
-    text: "#ffffff",
-    muted: "#eeeeee",
-    tag: "#666666",
-    accent: "#0099ff"
-  },
-  warm: {
-    bg: "#4b403b",
-    right: "#b6aaa1",
-    text: "#fffaf5",
-    muted: "#f2e7df",
-    tag: "#77645a",
-    accent: "#e6a06a"
-  },
-  blue: {
-    bg: "#35404b",
-    right: "#aeb8c1",
-    text: "#f7fbff",
-    muted: "#dce8f1",
-    tag: "#5f7180",
-    accent: "#66b8ff"
-  },
-  green: {
-    bg: "#3d4840",
-    right: "#abb5ad",
-    text: "#f7faf7",
-    muted: "#e0e9e1",
-    tag: "#66746a",
-    accent: "#83c99a"
-  },
-  purple: {
-    bg: "#453e4b",
-    right: "#b2aab7",
-    text: "#fbf8ff",
-    muted: "#e8e1ed",
-    tag: "#6e6275",
-    accent: "#c39bea"
-  },
-  light: {
-    bg: "#eeeeec",
-    right: "#cfcfcd",
-    text: "#262626",
-    muted: "#4b4b4b",
-    tag: "#d2d2d0",
-    accent: "#287dcc"
-  }
+/* =========================================================
+   デザイン設定
+   ---------------------------------------------------------
+   完成画像の見た目を微調整するときは、基本的にここだけ
+   変更すればOKです。
+
+   X座標：右へ行くほど大きく
+   Y座標：下へ行くほど大きく
+   ========================================================= */
+const DESIGN = {
+  // 全体
+  canvasWidth: 1200,
+  canvasHeight: 675,
+  leftWidth: 675,
+
+  // 左側の文字の基準位置
+  textX: 75,
+
+  // サービス名
+  serviceX: 50,
+  serviceY: 55,
+  serviceFontSize: 30,
+
+  // 作品タイトル
+  titleY: 112,
+  titleFontSize: 50,
+  titleMinFontSize: 34,
+  titleMaxWidth: 540,
+  titleFontWeight: 700,
+
+  // 作品ジャンル
+  genreY: 170,
+  genreFontSize: 16,
+  genreFontWeight: 600,
+
+  // 作品紹介文
+  descriptionY: 230,
+  descriptionWidth: 500,
+  descriptionFontSize: 20,
+  descriptionLineHeight: 28,
+  descriptionMaxLines: 3,
+
+  // CHARACTER
+  characterLabelY: 350,
+  characterLabelFontSize: 22,
+
+  // キャラクター名
+  characterNameX: 15,
+  characterNameY: 385,
+  characterNameFontSize: 21,
+
+  // キャラ紹介文
+  characterDescriptionX: 15,
+  characterDescriptionY: 420,
+  characterDescriptionWidth: 485,
+  characterDescriptionFontSize: 20,
+  characterDescriptionLineHeight: 28,
+  characterDescriptionMaxLines: 4,
+
+  // タグ
+  tagY: 520,
+  tagHeight: 40,
+  tagRadius: 25,
+  tagFontSize: 18,
+  tagPaddingX: 20,
+  tagGap: 10,
+
+  // キャッチコピー
+  catchcopyY: 585,
+  catchcopyFontSize: 28,
+
+  // フォント
+  fontFamily: "'Shippori Mincho B1', serif",
+  characterLabelFontFamily: "'Shippori Mincho B1', serif"
 };
+
+const themes = {  
+  seashore: {
+    bg: "#e1dedb",
+    right: "#a8a8a8",
+    text: "#763f03",
+    muted: "#815221",
+    tag: "#b2b7ba",
+    accent: "#038a8b"
+  },
+  nightcities: {
+    bg: "#10120e",
+    right: "#a8a8a8",
+    text: "#ccd6da",
+    muted: "#adb9be",
+    tag: "#a0121c",
+    accent: "#df992a"
+  },
+  flowers: {
+    bg: "#fdfdef",
+    right: "#a8a8a8",
+    text: "#0e1512",
+    muted: "#30423a",
+    tag: "#e9a052",
+    accent: "#ffa5a3"
+  },
+  teacups: {
+    bg: "#dfdde0",
+    right: "#a8a8a8",
+    text: "#877c79",
+    muted: "#978d8c",
+    tag: "#cdc8c7",
+    accent: "#72420d"
+  },
+  cleancities: {
+    bg: "#d6dee2",
+    right: "#a8a8a8",
+    text: "#141a1a",
+    muted: "#354040",
+    tag: "#c1a08d",
+    accent: "#0486b8"
+  },
+  basketgoal: {
+    bg: "#e9e3df",
+    right: "#a8a8a8",
+    text: "#1b1c18",
+    muted: "#41413a",
+    tag: "#f5f5f5",
+    accent: "#f48863"
+  },
+  lavender: {
+    bg: "#ffd6f5",
+    right: "#a8a8a8",
+    text: "#29335C",
+    muted: "#464d69",
+    tag: "#D387AB",
+    accent: "#72d3ba"
+  },
+};
+
 
 function wrapText(text, maxWidth, font) {
   ctx.font = font;
@@ -156,14 +242,14 @@ function render() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const leftW = 675;
+  const leftW = DESIGN.leftWidth;
   const imageX0 = leftW;
   const imageY0 = 0;
-  const imageW = 525;
-  const imageH = 675;
+  const imageW = DESIGN.canvasWidth - leftW;
+  const imageH = DESIGN.canvasHeight;
 
   ctx.fillStyle = t.bg;
-  ctx.fillRect(0, 0, leftW, 675);
+  ctx.fillRect(0, 0, leftW, DESIGN.canvasHeight);
 
   ctx.fillStyle = t.right;
   ctx.fillRect(imageX0, imageY0, imageW, imageH);
@@ -180,45 +266,67 @@ function render() {
     ctx.textBaseline = "top";
   }
 
-  const x = 75;
+  const x = DESIGN.textX;
 
   ctx.fillStyle = t.accent;
-  ctx.font = "700 30px Arial, 'Noto Sans JP', sans-serif";
+  ctx.font = `${DESIGN.titleFontWeight} ${DESIGN.serviceFontSize}px ${DESIGN.fontFamily}`;
   ctx.textBaseline = "top";
-  ctx.fillText(fields.serviceName.value || "サービス名", 50, 55);
+  ctx.fillText(fields.serviceName.value || "サービス名", DESIGN.serviceX, DESIGN.serviceY);
+
+  // タイトルは文字数だけでなく「実際の横幅」を測って自動縮小。
+  // DESIGN.titleFontSize から始め、titleMaxWidthに収まるまで小さくする。
+  const title = fields.title.value || "作品タイトル";
+  let titleSize = DESIGN.titleFontSize;
+  while (
+    titleSize > DESIGN.titleMinFontSize &&
+    (() => {
+      ctx.font = `${DESIGN.titleFontWeight} ${titleSize}px ${DESIGN.fontFamily}`;
+      return ctx.measureText(title).width > DESIGN.titleMaxWidth;
+    })()
+  ) {
+    titleSize -= 1;
+  }
 
   ctx.fillStyle = t.text;
-  ctx.font = "700 50px Arial, 'Noto Sans JP', sans-serif";
-  ctx.fillText(fields.title.value || "作品タイトル", x, 115);
+  ctx.font = `${DESIGN.titleFontWeight} ${titleSize}px ${DESIGN.fontFamily}`;
+  ctx.fillText(title, x, DESIGN.titleY);
+
+  ctx.fillStyle = t.accent;
+  ctx.font = `${DESIGN.genreFontWeight} ${DESIGN.genreFontSize}px ${DESIGN.fontFamily}`;
+  ctx.fillText(fields.genre.value || "", x, DESIGN.genreY);
 
   drawTextBlock(
     fields.description.value,
     x,
-    205,
-    500,
-    "21px Arial, 'Noto Sans JP', sans-serif",
-    28,
+    DESIGN.descriptionY,
+    DESIGN.descriptionWidth,
+    `${DESIGN.descriptionFontSize}px ${DESIGN.fontFamily}`,
+    DESIGN.descriptionLineHeight,
     t.muted,
-    3
+    DESIGN.descriptionMaxLines
   );
 
   ctx.fillStyle = t.accent;
-  ctx.font = "700 26px Arial, sans-serif";
-  ctx.fillText("CHARACTER", x, 300);
+  ctx.font = `700 ${DESIGN.characterLabelFontSize}px ${DESIGN.characterLabelFontFamily}`;
+  ctx.fillText("CHARACTER", x, DESIGN.characterLabelY);
 
   ctx.fillStyle = t.text;
-  ctx.font = "23px Arial, 'Noto Sans JP', sans-serif";
-  ctx.fillText(fields.characterName.value || "キャラクター名", x + 15, 345);
+  ctx.font = `${DESIGN.characterNameFontSize}px ${DESIGN.fontFamily}`;
+  ctx.fillText(
+    fields.characterName.value || "キャラクター名",
+    x + DESIGN.characterNameX,
+    DESIGN.characterNameY
+  );
 
   drawTextBlock(
     fields.characterDescription.value,
-    x + 15,
-    388,
-    485,
-    "21px Arial, 'Noto Sans JP', sans-serif",
-    28,
+    x + DESIGN.characterDescriptionX,
+    DESIGN.characterDescriptionY,
+    DESIGN.characterDescriptionWidth,
+    `${DESIGN.characterDescriptionFontSize}px ${DESIGN.fontFamily}`,
+    DESIGN.characterDescriptionLineHeight,
     t.muted,
-    3
+    DESIGN.characterDescriptionMaxLines
   );
 
   const tags = fields.tags.value
@@ -228,27 +336,31 @@ function render() {
     .slice(0, 4);
 
   let tx = x;
-  const tagY = 507;
+  const tagY = DESIGN.tagY;
 
-  ctx.font = "21px Arial, 'Noto Sans JP', sans-serif";
+  ctx.font = `${DESIGN.tagFontSize}px ${DESIGN.fontFamily}`;
   tags.forEach(tag => {
-    const tw = ctx.measureText(tag).width + 30;
+    const tw = ctx.measureText(tag).width + DESIGN.tagPaddingX * 2;
     ctx.fillStyle = t.tag;
     ctx.beginPath();
-    ctx.roundRect(tx, tagY, tw, 55, 11);
+    ctx.roundRect(tx, tagY, tw, DESIGN.tagHeight, DESIGN.tagRadius);
     ctx.fill();
 
     ctx.fillStyle = t.text;
-    ctx.fillText(tag, tx + 15, tagY + 15);
-    tx += tw + 8;
+    ctx.fillText(
+      tag,
+      tx + DESIGN.tagPaddingX,
+      tagY + (DESIGN.tagHeight - DESIGN.tagFontSize) / 2
+    );
+    tx += tw + DESIGN.tagGap;
   });
 
   ctx.fillStyle = t.accent;
-  ctx.font = "700 28px Arial, 'Noto Sans JP', sans-serif";
+  ctx.font = `700 ${DESIGN.catchcopyFontSize}px ${DESIGN.fontFamily}`;
   ctx.fillText(
     "”" + (fields.catchcopy.value || "キャッチコピー") + "”",
     x,
-    585
+    DESIGN.catchcopyY
   );
 }
 
@@ -340,8 +452,8 @@ canvas.addEventListener("pointermove", event => {
   const dx = (event.clientX - lastPointer.x) * scaleX;
   const dy = (event.clientY - lastPointer.y) * scaleY;
 
-  const imageAreaW = 525;
-  const imageAreaH = 675;
+  const imageAreaW = DESIGN.canvasWidth - DESIGN.leftWidth;
+  const imageAreaH = DESIGN.canvasHeight;
   const zoom = imagePosition.zoom / 100;
   const coverScale = Math.max(
     imageAreaW / uploadedImage.width,
