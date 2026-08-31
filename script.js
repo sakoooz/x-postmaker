@@ -357,13 +357,26 @@ function render() {
     tx += tw + DESIGN.tagGap;
   });
 
-  ctx.fillStyle = t.accent;
-  ctx.font = `700 ${DESIGN.catchcopyFontSize}px ${DESIGN.fontFamily}`;
-  ctx.fillText(
-    "”" + (fields.catchcopy.value || "キャッチコピー") + "”",
-    x,
-    DESIGN.catchcopyY
-  );
+const catchcopy = "”" + (fields.catchcopy.value || "キャッチコピー") + "”";
+let catchcopySize = DESIGN.catchcopyFontSize;
+
+while (
+  catchcopySize > DESIGN.catchcopyMinFontSize &&
+  (() => {
+    ctx.font = `700 ${catchcopySize}px ${DESIGN.fontFamily}`;
+    return ctx.measureText(catchcopy).width > DESIGN.catchcopyMaxWidth;
+  })()
+) {
+  catchcopySize -= 1;
+}
+
+ctx.fillStyle = t.accent;
+ctx.font = `700 ${catchcopySize}px ${DESIGN.fontFamily}`;
+ctx.fillText(
+  catchcopy,
+  x,
+  DESIGN.catchcopyY
+);
 }
 
 Object.values(fields).forEach(el => {
