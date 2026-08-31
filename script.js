@@ -39,42 +39,48 @@ const themes = {
     right: "#a8a8a8",
     text: "#ffffff",
     muted: "#eeeeee",
-    tag: "#666666"
+    tag: "#666666",
+    accent: "#0099ff"
   },
   warm: {
     bg: "#4b403b",
     right: "#b6aaa1",
     text: "#fffaf5",
     muted: "#f2e7df",
-    tag: "#77645a"
+    tag: "#77645a",
+    accent: "#e6a06a"
   },
   blue: {
     bg: "#35404b",
     right: "#aeb8c1",
     text: "#f7fbff",
     muted: "#dce8f1",
-    tag: "#5f7180"
+    tag: "#5f7180",
+    accent: "#66b8ff"
   },
   green: {
     bg: "#3d4840",
     right: "#abb5ad",
     text: "#f7faf7",
     muted: "#e0e9e1",
-    tag: "#66746a"
+    tag: "#66746a",
+    accent: "#83c99a"
   },
   purple: {
     bg: "#453e4b",
     right: "#b2aab7",
     text: "#fbf8ff",
     muted: "#e8e1ed",
-    tag: "#6e6275"
+    tag: "#6e6275",
+    accent: "#c39bea"
   },
   light: {
     bg: "#eeeeec",
     right: "#cfcfcd",
     text: "#262626",
     muted: "#4b4b4b",
-    tag: "#d2d2d0"
+    tag: "#d2d2d0",
+    accent: "#287dcc"
   }
 };
 
@@ -176,7 +182,7 @@ function render() {
 
   const x = 75;
 
-  ctx.fillStyle = "#0099ff";
+  ctx.fillStyle = t.accent;
   ctx.font = "700 30px Arial, 'Noto Sans JP', sans-serif";
   ctx.textBaseline = "top";
   ctx.fillText(fields.serviceName.value || "サービス名", 50, 55);
@@ -188,28 +194,29 @@ function render() {
   drawTextBlock(
     fields.description.value,
     x,
-    230,
+    205,
     500,
-    "24px Arial, 'Noto Sans JP', sans-serif",
-    31,
+    "21px Arial, 'Noto Sans JP', sans-serif",
+    28,
     t.muted,
     3
   );
 
-  ctx.fillStyle = t.text;
-  ctx.font = "700 30px Arial, sans-serif";
-  ctx.fillText("CHARACTER", x, 315);
+  ctx.fillStyle = t.accent;
+  ctx.font = "700 26px Arial, sans-serif";
+  ctx.fillText("CHARACTER", x, 300);
 
-  ctx.font = "24px Arial, 'Noto Sans JP', sans-serif";
-  ctx.fillText(fields.characterName.value || "キャラクター名", x + 15, 365);
+  ctx.fillStyle = t.text;
+  ctx.font = "23px Arial, 'Noto Sans JP', sans-serif";
+  ctx.fillText(fields.characterName.value || "キャラクター名", x + 15, 345);
 
   drawTextBlock(
     fields.characterDescription.value,
     x + 15,
-    410,
+    388,
     485,
-    "24px Arial, 'Noto Sans JP', sans-serif",
-    31,
+    "21px Arial, 'Noto Sans JP', sans-serif",
+    28,
     t.muted,
     3
   );
@@ -236,7 +243,7 @@ function render() {
     tx += tw + 8;
   });
 
-  ctx.fillStyle = t.text;
+  ctx.fillStyle = t.accent;
   ctx.font = "700 28px Arial, 'Noto Sans JP', sans-serif";
   ctx.fillText(
     "”" + (fields.catchcopy.value || "キャッチコピー") + "”",
