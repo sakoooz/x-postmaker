@@ -104,6 +104,8 @@ const DESIGN = {
   // キャッチコピー
   catchcopyY: 585,
   catchcopyFontSize: 28,
+  catchcopyMinFontSize: 20,
+  catchcopyMaxWidth: 540,
 
   // フォント
   fontFamily: "'Shippori Mincho B1', serif",
