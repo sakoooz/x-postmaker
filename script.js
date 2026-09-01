@@ -140,10 +140,10 @@ const themes = {
   teacups: {
     bg: "#dfdde0",
     right: "#a8a8a8",
-    text: "#877c79",
-    muted: "#978d8c",
-    tag: "#cdc8c7",
-    accent: "#72420d"
+    text: "#72420d",
+    muted: "#765737",
+    tag: "#978d8c",
+    accent: "#ce8d03"
   },
   cleancities: {
     bg: "#d6dee2",
