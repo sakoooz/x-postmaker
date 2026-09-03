@@ -169,6 +169,30 @@ const themes = {
     tag: "#D387AB",
     accent: "#72d3ba"
   },
+  pistachio: {
+    bg: "#e2e7e9",
+    right: "#a8a8a8",
+    text: "#142718",
+    muted: "#273f2c",
+    tag: "#b5b067",
+    accent: "#8b634d"
+  },
+  greenapple: {
+    bg: "#c6d3c8",
+    right: "#a8a8a8",
+    text: "#0c1601",
+    muted: "#172904",
+    tag: "#9f8322",
+    accent: "#639d01"
+  },
+  cyberpunk: {
+    bg: "#1a1a1a",
+    right: "#a8a8a8",
+    text: "#8addcb",
+    muted: "#5f9e91",
+    tag: "#127c8c",
+    accent: "#f35e5c"
+  },
 };
 
 
