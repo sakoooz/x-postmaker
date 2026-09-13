@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const fields = {
   serviceName: document.getElementById("serviceName"),
+  workUrl: document.getElementById("workUrl"),
   title: document.getElementById("title"),
   genre: document.getElementById("genre"),
   description: document.getElementById("description"),
@@ -14,6 +15,7 @@ const fields = {
 };
 
 const imageInput = document.getElementById("imageInput");
+const qrInput = document.getElementById("qrInput");
 const imageZoom = document.getElementById("imageZoom");
 const imageX = document.getElementById("imageX");
 const imageY = document.getElementById("imageY");
@@ -25,6 +27,7 @@ const downloadButton = document.getElementById("download");
 const status = document.getElementById("status");
 
 let uploadedImage = null;
+let uploadedQr = null;
 let dragging = false;
 let lastPointer = null;
 
@@ -56,6 +59,16 @@ const DESIGN = {
   serviceX: 50,
   serviceY: 55,
   serviceFontSize: 30,
+
+  // URL
+  urlX: 235,
+  urlY: 60,
+  urlFontSize: 20,
+
+  // QRコード
+  qrX: 1075,
+  qrY: 550,
+  qrSize: 100,
 
   // 作品タイトル
   titleY: 112,
@@ -100,6 +113,7 @@ const DESIGN = {
   tagFontSize: 18,
   tagPaddingX: 20,
   tagGap: 10,
+  tagTextColor: null,
 
   // キャッチコピー
   catchcopyY: 585,
@@ -119,6 +133,7 @@ const themes = {
     text: "#763f03",
     muted: "#815221",
     tag: "#b2b7ba",
+    tagText: "#763f03",
     accent: "#038a8b"
   },
   nightcities: {
@@ -127,6 +142,7 @@ const themes = {
     text: "#ccd6da",
     muted: "#adb9be",
     tag: "#a0121c",
+    tagText: "#ffffff",
     accent: "#df992a"
   },
   flowers: {
@@ -135,6 +151,7 @@ const themes = {
     text: "#0e1512",
     muted: "#30423a",
     tag: "#e9a052",
+    tagText: "#0e1512",
     accent: "#ffa5a3"
   },
   teacups: {
@@ -143,6 +160,7 @@ const themes = {
     text: "#72420d",
     muted: "#765737",
     tag: "#978d8c",
+    tagText: "#ffffff",
     accent: "#ce8d03"
   },
   cleancities: {
@@ -151,6 +169,7 @@ const themes = {
     text: "#141a1a",
     muted: "#354040",
     tag: "#c1a08d",
+    tagText: "#ffffff",
     accent: "#0486b8"
   },
   basketgoal: {
@@ -159,15 +178,17 @@ const themes = {
     text: "#1b1c18",
     muted: "#41413a",
     tag: "#f5f5f5",
+    tagText: "#1b1c18",
     accent: "#f48863"
   },
-  lavender: {
-    bg: "#ffd6f5",
+  ayame: {
+    bg: "#353866",
     right: "#a8a8a8",
-    text: "#29335C",
-    muted: "#464d69",
-    tag: "#D387AB",
-    accent: "#72d3ba"
+    text: "#F8FAFF",
+    muted: "#c4c8d4",
+    tag: "#AAABD3",
+    tagText: "#353866",
+    accent: "#CBA6C3"
   },
   pistachio: {
     bg: "#e2e7e9",
@@ -175,6 +196,7 @@ const themes = {
     text: "#142718",
     muted: "#273f2c",
     tag: "#b5b067",
+    tagText: "#142718",
     accent: "#8b634d"
   },
   greenapple: {
@@ -183,6 +205,7 @@ const themes = {
     text: "#0c1601",
     muted: "#172904",
     tag: "#9f8322",
+    tagText: "#c6d3c8",
     accent: "#639d01"
   },
   cyberpunk: {
@@ -191,7 +214,26 @@ const themes = {
     text: "#8addcb",
     muted: "#5f9e91",
     tag: "#127c8c",
+    tagText: "#8addcb",
     accent: "#f35e5c"
+  },
+  purplesmoke: {
+    bg: "#566270",
+    right: "#a8a8a8",
+    text: "#FFFFF3",
+    muted: "#d1d1c7",
+    tag: "#837b93",
+    tagText: "#ffffff",
+    accent: "#A593E0"
+  },
+  berrychocolate: {
+    bg: "#5D3140",
+    right: "#a8a8a8",
+    text: "#F6D8BD",
+    muted: "#d4b59a",
+    tag: "#F39399",
+    tagText: "#000000",
+    accent: "#CF4173"
   },
 };
 
@@ -299,6 +341,15 @@ function render() {
   ctx.textBaseline = "top";
   ctx.fillText(fields.serviceName.value || "サービス名", DESIGN.serviceX, DESIGN.serviceY);
 
+  // URL
+  ctx.fillStyle = t.muted;
+  ctx.font = `${DESIGN.urlFontSize}px ${DESIGN.fontFamily}`;
+  ctx.fillText(
+  fields.workUrl.value || "",
+  DESIGN.urlX,
+  DESIGN.urlY
+  );
+
   // タイトルは文字数だけでなく「実際の横幅」を測って自動縮小。
   // DESIGN.titleFontSize から始め、titleMaxWidthに収まるまで小さくする。
   const title = fields.title.value || "作品タイトル";
@@ -372,7 +423,7 @@ function render() {
     ctx.roundRect(tx, tagY, tw, DESIGN.tagHeight, DESIGN.tagRadius);
     ctx.fill();
 
-    ctx.fillStyle = t.text;
+    ctx.fillStyle = t.tagText;
     ctx.fillText(
       tag,
       tx + DESIGN.tagPaddingX,
@@ -401,7 +452,20 @@ ctx.fillText(
   x,
   DESIGN.catchcopyY
 );
+
+// QRコード
+if (uploadedQr) {
+    ctx.drawImage(
+    uploadedQr,
+    DESIGN.qrX,
+    DESIGN.qrY,
+    DESIGN.qrSize,
+    DESIGN.qrSize
+  );
 }
+
+}
+
 
 Object.values(fields).forEach(el => {
   el.addEventListener("input", render);
@@ -439,6 +503,37 @@ imageInput.addEventListener("change", () => {
 
     img.onerror = () => {
       status.textContent = "画像を読み込めませんでした。";
+    };
+
+    img.src = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+qrInput.addEventListener("change", () => {
+  const file = qrInput.files && qrInput.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    status.textContent = "QRコード画像を選択してください。";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const img = new Image();
+
+    img.onload = () => {
+      uploadedQr = img;
+      status.textContent = "QRコードを読み込みました。";
+      render();
+    };
+
+    img.onerror = () => {
+      status.textContent = "QRコード画像を読み込めませんでした。";
     };
 
     img.src = reader.result;

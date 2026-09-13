@@ -15,8 +15,33 @@
     <section class="controls">
       <h1>Talelynx X投稿画像メーカー</h1>
 
+      <label>カラーテーマ
+        <select id="theme">
+          <option value="seashore">Seashore</option>
+          <option value="nightcities">NightCities</option>
+          <option value="flowers">Flowers</option>
+          <option value="teacups">Teacups</option>
+          <option value="cleancities">CleanCities</option>
+          <option value="ayame">Ayame</option>
+          <option value="basketgoal">BasketGoal</option>
+          <option value="pistachio">Pistachio</option>
+          <option value="greenapple">GreenApple</option>
+          <option value="cyberpunk">Cyberpunk</option>
+          <option value="purplesmoke">PurpleSmoke</option>
+          <option value="berrychocolate">BerryChocolate</option>
+        </select>
+      </label>
+
       <label>サービス名
         <input id="serviceName" value="Talelynx">
+      </label>
+
+      <label>作品URL
+        <input id="workUrl" value="https://talelynx.ai/">
+      </label>
+
+      <label>QRコード
+        <input id="qrInput" type="file" accept="image/png,image/jpeg,image/webp">
       </label>
 
       <label>作品タイトル
@@ -72,21 +97,6 @@
         <button id="resetImage" type="button" class="secondary-button">画像位置・倍率をリセット</button>
         <p class="drag-hint">プレビューの画像をドラッグして移動できます。</p>
       </fieldset>
-
-      <label>カラーテーマ
-        <select id="theme">
-          <option value="seashore">Seashore</option>
-          <option value="nightcities">NightCities</option>
-          <option value="flowers">Flowers</option>
-          <option value="teacups">Teacups</option>
-          <option value="cleancities">CleanCities</option>
-          <option value="lavender">Lavender</option>
-          <option value="basketgoal">BasketGoal</option>
-          <option value="pistachio">Pistachio</option>
-          <option value="greenapple">GreenApple</option>
-          <option value="cyberpunk">Cyberpunk</option>
-        </select>
-      </label>
 
       <button id="download" type="button">PNG画像を書き出す</button>
       <p id="status" aria-live="polite"></p>
